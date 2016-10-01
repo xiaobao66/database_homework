@@ -14,10 +14,6 @@ app.use(bodyParser.json());
 app.use(function (req, res, next) {
     var path = req.path;
 
-    if (path === '/favicon.ico') {
-        res.status(404).end();
-    }
-
     if (path == "/") {
         path = "ismartjs/index.html";
     } else {
