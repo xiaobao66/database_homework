@@ -1,9 +1,16 @@
 [
   {
-    "id": "dashboard",
-    "title": "仪表盘",
+    "id": "teacher_info",
+    "title": "教师个人信息",
     "url": "html/dashboard.html",
     "icon": "fa fa-home",
+    "open": "true"
+  },
+  {
+    "id": "teacher_title",
+    "title": "教师职称信息",
+    "url": "doc/index.html",
+    "icon": "fa fa-file",
     "open": "true"
   }
 ]
