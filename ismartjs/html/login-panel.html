@@ -21,17 +21,17 @@
 </form>
 <script>
     function submitDone(rs) {
-        if (rs == -1) {
+        if (rs.loginFlag == -1) {
             S.alert("您输入的用户名不存在").done(function () {
                 S.N("#account").focus();
             });
 
-        } else if (rs == -2) {
+        } else if (rs.loginFlag == -2) {
             S.alert("您输入的密码不正确").done(function () {
                 S.N("#password").focus();
             });
 
-        } else if (rs == -3) {
+        } else if (rs.loginFlag == -3) {
             S.alert("该账号已经被冻结，无法使用").done(function () {
                 S.N("#account").focus();
             });
@@ -40,11 +40,7 @@
         }
     }
 
-    function loginAction() {
-        var deferred = $.Deferred();
-        setTimeout(function () {
-            deferred.resolve(true);
-        }, 300);
-        return deferred;
+    function loginAction(data) {
+        return S.post('/rest/login', data);
     }
 </script>

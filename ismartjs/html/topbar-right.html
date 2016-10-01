@@ -1,8 +1,17 @@
+<meta args="username"/>
 <div class="topbar-nav topbar-right-menu">
     <div class="topbar-nav-menu">
-        <a href="javascript:;" s="click" s-click-action="S.open('support.html')" >支持与反馈</a>
+        <a href="javascript:;" s s-data="username" style="cursor: default;"></a>
     </div>
     <div class="topbar-nav-menu">
-        <a href="http://bbs.ismartjs.com" target="_blank" >论坛</a>
+        <a href="javascript:;" s s-click="logout()">退出登录</a>
     </div>
 </div>
+
+<script type="text/javascript">
+    function logout() {
+        S.get('/rest/logout', '', 'text').done(function (data) {
+            window.location.href = '/';
+        });
+    }
+</script>

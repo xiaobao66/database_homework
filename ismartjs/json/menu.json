@@ -10,7 +10,6 @@
     "id": "teacher_title",
     "title": "教师职称信息",
     "url": "doc/index.html",
-    "icon": "fa fa-file",
-    "open": "true"
+    "icon": "fa fa-file"
   }
 ]

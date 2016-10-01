@@ -2,7 +2,7 @@
 <div class="topbar">
     <div s="window" s-window="{href:Main.topbarLeftUrl}" class="pull-left"></div>
     <div class="pull-right topbar-right">
-        <div s="window" s-window="{href:Main.topbarRightUrl}"></div>
+        <div s="window" s-window="{href:Main.topbarRightUrl, args:{username: Main.username}}"></div>
     </div>
 </div>
 <div class="main-view" id="mainView">
@@ -14,7 +14,7 @@
                 {%if(menu.children && menu.children.length){%}
                 <div class="sidebar-title">
                     <div class="sidebar-title-inner"><span
-                            class="sidebar-title-icon {%=menu.icon%}"></span>
+                        class="sidebar-title-icon {%=menu.icon%}"></span>
                         <span class="sidebar-title-text">{%=menu.title%}</span>
                     <span class="sidebar-manage">
                         <i class="caret"></i>
@@ -60,7 +60,7 @@
 <!--ajax操作提示-->
 <div class="alert alert-warning ajax-active-tip " role="alert" id="ajaxActiveTip"></div>
 
-<div class="main-bottom" id="mainBottom" s="window" ></div>
+<div class="main-bottom" id="mainBottom" s="window"></div>
 
 <ul id="mainTabContextmenu" s="contextmenu" s-contextmenu="{filter: MainTabContextmenu.filter}"
     class="s-ui-contextmenu">
@@ -102,13 +102,13 @@
         bottomUrl: null,
         loginPanel: "html/login-panel.html",
         tabActiveRefresh: true,
-        init: function(){
+        init: function () {
             var that = this;
-            $(window).on("popstate", function(e){
+            $(window).on("popstate", function (e) {
                 var state = history.state;
-                if(state !== undefined){
+                if (state !== undefined) {
                     var tab = MainTab.findSingleTabByUrl(state.moduleUrl);
-                    if(tab){
+                    if (tab) {
                         tab.active(false);
                     } else {
                         that.open($.Deferred(), state.moduleUrl, state.moduleArgs, false);
@@ -121,7 +121,7 @@
         handleAjaxError: function (e, errorTip, errorMsg, xhr) {
             if (xhr.status == 403) {
                 e.stopPropagation();
-                if(errorMsg == "LoginRequire"){ //需要登录
+                if (errorMsg == "LoginRequire") { //需要登录
                     if (e.retryRequest) {
                         loginRetryCallbacks.push(e.retryRequest);
                     }
@@ -148,7 +148,7 @@
         },
         historyListener: {
             onPush: function (tab) {
-                history.pushState({moduleUrl:tab.data.url, moduleArgs: tab.data.args}, null , "#" + tab.data.url);
+                history.pushState({moduleUrl: tab.data.url, moduleArgs: tab.data.args}, null, "#" + tab.data.url);
             },
             onGet: function () {
                 var href = window.location.href;
@@ -192,7 +192,7 @@
         if (tabNode.size() > 0) {
             var tab = tabNode.data("tab");
             tab.active();
-            if(Main.tabActiveRefresh){
+            if (Main.tabActiveRefresh) {
                 tab.tabWindows[0].smart.refresh();
             }
             return;
@@ -218,13 +218,13 @@
 
     var openUrl = S.open = function (deferred, url, args, pushStateFlag) {
         //在已经打开的选项卡中，根据url获取选项卡，判断其上面是否有single=true的属性，如果有，则直接把该选项卡打开，而不是打开新的页面
-        if(pushStateFlag === undefined){
+        if (pushStateFlag === undefined) {
             pushStateFlag = true;
         }
         var tab = MainTab.findSingleTabByUrl(url);
         if (tab) {
             tab.active(pushStateFlag);
-            if(Main.tabActiveRefresh){
+            if (Main.tabActiveRefresh) {
                 tab.tabWindows[0].smart.refresh();
             }
             return;
@@ -428,7 +428,7 @@
             if (MainTab.currentTab == this) {
                 return;
             }
-            if(pushStateFlag === undefined){
+            if (pushStateFlag === undefined) {
                 pushStateFlag = true;
             }
             var menuUrl = this.data.url;
@@ -447,7 +447,7 @@
             this.showTabWindow(pushStateFlag);
             return this;
         },
-        isTop: function(){
+        isTop: function () {
             return this.node.hasClass("active");
         },
         fallow: function () {
@@ -529,7 +529,7 @@
                 }
             });
             if (meta.closeable === "true" || meta.closeable == undefined
-                    || meta.closeable == "" || meta.closeable === true) {
+                || meta.closeable == "" || meta.closeable === true) {
                 this._addCloseHandle();
             } else {
                 this.node.attr("closeable", "false");
@@ -638,7 +638,7 @@
             TabWindow.currentTabWindow = this;
             this.mainTab.currentTabWindow = this;
             this.node.fadeIn();
-            if (this.data.url && pushStateFlag){
+            if (this.data.url && pushStateFlag) {
                 Main.historyListener.onPush(this.mainTab);
             }
         },
@@ -705,14 +705,14 @@
         hideAjaxActiveTip();
     }).on("smart-ajaxError", function (e, errorTip, msg) {
         Main.handleAjaxError ? Main.handleAjaxError.apply(S, Array.prototype.slice.call(arguments))
-                : (S.alert($.trim(msg), "error"));
+            : (S.alert($.trim(msg), "error"));
         showAjaxActiveTip(errorTip, "error");
         hideAjaxActiveTip();
     });
     //处理bottom的url问题，mainWindow的底部位置
-    if(Main.bottomUrl){
-        S.on("s-ready", function(){
-            S.S("#mainBottom").load(Main.bottomUrl).done(function(){
+    if (Main.bottomUrl) {
+        S.on("s-ready", function () {
+            S.S("#mainBottom").load(Main.bottomUrl).done(function () {
                 var node = S.N("#mainBottom");
                 S.N("#mainView").css("bottom", node.height());
             });

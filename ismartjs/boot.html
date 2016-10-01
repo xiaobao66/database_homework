@@ -20,13 +20,21 @@
     var loginDiv = S.N("#loginDiv");
 
     S.on("s-ready", function () {
-        loginPanel.load('html/login-panel.html');
-        loginDiv.show();
-        loginPanel.node.on("close", function (e, rs) {
-            if (rs) {
-                window.CURRENT_MANAGER = rs;
+        S.get("/rest/login/check").done(function (rs) {
+            if (rs.loginFlag) {
+                Page.Main.username = rs.username;
                 mainWindow.load('layouts/main0.html', Page);
                 loginDiv.remove();
+            } else {
+                loginPanel.load('html/login-panel.html');
+                loginDiv.show();
+                loginPanel.node.on("close", function (e, rs) {
+                    if (rs) {
+                        Page.Main.username = rs.username;
+                        mainWindow.load('layouts/main0.html', Page);
+                        loginDiv.remove();
+                    }
+                });
             }
         });
     })
