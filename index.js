@@ -2,6 +2,8 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 
+var db = require('./lib/mysql').config(require('./db.config.js'));
+
 var app = express();
 
 var loginRecord = {};
@@ -36,12 +38,16 @@ app.use(function (req, res, next) {
     }
 });
 
+//用户登录
 app.get('/rest/login/check', function (req, res) {
-    if (req.cookies.loginId) {
-        if (req.cookies.loginId in loginRecord) {
+    var loginId = req.cookies.loginId;
+    if (loginId) {
+        if (loginId in loginRecord) {
             res.json({
                 loginFlag: true,
-                username: loginRecord[req.cookies.loginId]
+                username: loginRecord[loginId].username,
+                flag: loginRecord[loginId].flag,
+                teacherId: loginRecord[loginId].teacherId
             });
         } else {
             res.json({
@@ -56,15 +62,38 @@ app.get('/rest/login/check', function (req, res) {
 });
 
 app.post('/rest/login', function (req, res) {
-    var loginId = Math.random();
-    loginRecord[loginId] = req.body.account;
+    var username = req.body.account,
+        password = req.body.password;
 
-    res.cookie('loginId', loginId, {
-        expires: new Date(Date.now() + 900000)
-    });
-    res.json({
-        loginFlag: 1,
-        username: req.body.account
+    var userSql = 'select * from user_info where username = ?';
+
+    db.query(userSql, [username]).done(function (result, fields) {
+        if (result.length === 0) {
+            res.json({
+                loginFlag: -1
+            });
+        } else if (result[0].password !== password) {
+            res.json({
+                loginFlag: -2
+            });
+        } else {
+            var loginId = Math.random() + '' + result[0].user_id;
+            loginRecord[loginId] = {
+                username: username,
+                flag: result[0].flag,
+                teacherId: result[0]['teacher_id'] ? result[0]['teacher_id'] : ''
+            };
+            // console.log(loginRecord);
+            res.cookie('loginId', loginId, {
+                expires: new Date(Date.now() + 900000)
+            });
+            res.json({
+                loginFlag: 1,
+                username: username,
+                flag: result[0].flag,
+                teacherId: result[0]['teacher_id'] ? result[0]['teacher_id'] : ''
+            });
+        }
     });
 });
 
