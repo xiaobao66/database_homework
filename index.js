@@ -138,6 +138,46 @@ app.get('/rest/teacher_info', function (req, res) {
     });
 });
 
+//修改账户密码
+app.post('/rest/password_change', function (req, res) {
+    var username = req.body.username,
+        oldPassword = req.body.oldPassword,
+        newPassword = req.body.newPassword;
+
+    var checkAccountSql = "SELECT\n" +
+        "	*\n" +
+        "FROM\n" +
+        "	user_info\n" +
+        "WHERE\n" +
+        "	username = ?\n" +
+        "AND PASSWORD = ?"
+
+    var updateAccountSql = "UPDATE user_info\n" +
+        "SET `password` = ?\n" +
+        "WHERE\n" +
+        "	username = ?";
+
+    db.query(checkAccountSql, [username, oldPassword]).done(function (result, fields) {
+        if (result.length > 0) {
+            db.query(updateAccountSql, [newPassword, username]).done(function (result, field, err) {
+                if (err) {
+                    res.json({
+                        flag: -2
+                    });
+                } else {
+                    res.json({
+                        flag: 1
+                    });
+                }
+            });
+        } else {
+            res.json({
+                flag: -1
+            })
+        }
+    });
+});
+
 //启动express服务器
 app.listen('3000', function () {
     console.log('server started');

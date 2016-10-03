@@ -261,7 +261,8 @@
                 var needOpenMenus = [];
                 $.each(menus, function (i, menu) {
                     menu.args = {
-                        teacherId: Main.teacherId
+                        teacherId: Main.teacherId,
+                        username: Main.username
                     };
                     urlMapping[menu.url] = menu;
                     menu.icon = menu.icon || Main.defaultMenuIcon;
@@ -272,7 +273,8 @@
                     if (menu.children) {
                         $.each(menu.children, function (i, cm) {
                             cm.args = {
-                                teacherId: Main.teacherId
+                                teacherId: Main.teacherId,
+                                username: Main.username
                             };
                             that.menuMapping[cm.id] = cm;
                             if (cm.open) {
@@ -303,7 +305,7 @@
                         var menu = urlMapping[hash];
                         new MainTab(menu).add().active();
                     } else {
-                        openUrl(null, hash, {teacherId: Main.teacherId});
+                        openUrl(null, hash, {teacherId: Main.teacherId,username: Main.username});
                     }
                 } else {
                     openMainTab && openMainTab.active();
