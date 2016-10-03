@@ -89,12 +89,16 @@
 </ul>
 
 <script type="text/javascript">
-
     //默认参数配置
     var loginProcessStatus = 0;
     var loginRetryCallbacks = [];
+    var menuUrl = null;
+    if(Main.flag === 0) {
+        menuUrl = 'json/menu.json'
+    }
+
     Main = $.extend({
-        menuUrl: null, //需要您来定义
+        menuUrl: menuUrl, //需要您来定义
         defaultTabIcon: "fa fa-file",
         defaultMenuIcon: "",
         topbarRightUrl: "html/topbar-right.html",
@@ -256,6 +260,9 @@
                 var urlMapping = {};
                 var needOpenMenus = [];
                 $.each(menus, function (i, menu) {
+                    menu.args = {
+                        teacherId: Main.teacherId
+                    };
                     urlMapping[menu.url] = menu;
                     menu.icon = menu.icon || Main.defaultMenuIcon;
                     that.menuMapping[menu.id] = menu;
@@ -264,6 +271,9 @@
                     }
                     if (menu.children) {
                         $.each(menu.children, function (i, cm) {
+                            cm.args = {
+                                teacherId: Main.teacherId
+                            };
                             that.menuMapping[cm.id] = cm;
                             if (cm.open) {
                                 needOpenMenus.push(cm);
@@ -271,6 +281,7 @@
                         });
                     }
                 });
+
                 that.smart.data({menus: menus});
                 var openMainTab;
                 //如果根据hash要打开的页面的url和默认需要打开的有相同的，则不需要创建新的，直接将已经打开的置为active。

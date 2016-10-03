@@ -1,3 +1,35 @@
-<meta title="教师基本信息" />
-<h3>欢迎使用iSmartJs</h3>
-<hr />
+<meta title="教师基本信息" args="teacherId"/>
+<h3>教师基本信息</h3>
+<div style="width: 65%;margin: 0 auto;padding-top: 20px;">
+    <table class="table table-striped table-hover table-bordered" style="width: 100%;font-size: 16px;">
+        <thead>
+        <tr>
+            <th>名称</th>
+            <th>内容</th>
+        </tr>
+        </thead>
+        <tbody s="tpl" s-data="S.get('/rest/teacher_info', {teacherId: teacherId})">
+        <script type="text/template">
+            <tr>
+                <td>姓名</td>
+                <td>{%= this.teacher_name %}</td>
+            </tr>
+            {%if(this.sex == 0){%}
+            <tr>
+                <td>性别</td>
+                <td>男</td>
+            </tr>
+            {%} else {%}
+            <tr>
+                <td>性别</td>
+                <td>女</td>
+            </tr>
+            {%}%}
+            <tr>
+                <td>学院</td>
+                <td>{%= this.college %}</td>
+            </tr>
+        </script>
+        </tbody>
+    </table>
+</div>

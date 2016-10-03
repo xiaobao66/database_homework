@@ -19,7 +19,7 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 app.use(function (req, res, next) {
     var path = req.path;
-    
+
     if (/^\/rest\/.+$/g.test(path)) {
         next();
         return;
@@ -38,7 +38,7 @@ app.use(function (req, res, next) {
     }
 });
 
-//用户登录
+//用户登录状态查询
 app.get('/rest/login/check', function (req, res) {
     var loginId = req.cookies.loginId;
     if (loginId) {
@@ -61,12 +61,14 @@ app.get('/rest/login/check', function (req, res) {
     }
 });
 
+//用户登录处理
 app.post('/rest/login', function (req, res) {
     var username = req.body.account,
         password = req.body.password;
 
     var userSql = 'select * from user_info where username = ?';
 
+    //数据库中查询用户信息
     db.query(userSql, [username]).done(function (result, fields) {
         if (result.length === 0) {
             res.json({
@@ -97,10 +99,43 @@ app.post('/rest/login', function (req, res) {
     });
 });
 
+//用户登出处理
 app.get('/rest/logout', function (req, res) {
     res.clearCookie('loginId');
     delete loginRecord[req.cookies.loginId];
     res.end('log out');
+});
+
+//查询教师基本信息
+app.get('/rest/teacher_info', function (req, res) {
+    var teacherInfoSql = "SELECT\n" +
+        "	teacher_info.`name` teacher_name,\n" +
+        "	sex,\n" +
+        "	college,\n" +
+        "	title_info.`name` title_name,\n" +
+        "	salary,\n" +
+        "	allowance\n" +
+        "FROM\n" +
+        "	teacher_info,\n" +
+        "	title_info\n" +
+        "WHERE\n" +
+        "	teacher_info.title_id = title_info.title_id\n" +
+        "AND teacher_info.teacher_id = ?";
+
+    db.query(teacherInfoSql, [req.query.teacherId]).done(function (result, fields) {
+        if (result.length === 0) {
+            res.json({});
+        } else {
+            res.json({
+                teacher_name: result[0]['teacher_name'],
+                sex: result[0].sex,
+                college: result[0].college,
+                title_name: result[0]['title_name'],
+                salary: result[0].salary,
+                allowance: result[0].allowance
+            });
+        }
+    });
 });
 
 //启动express服务器

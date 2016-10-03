@@ -23,6 +23,8 @@
         S.get("/rest/login/check").done(function (rs) {
             if (rs.loginFlag) {
                 Page.Main.username = rs.username;
+                Page.Main.flag = rs.flag;
+                Page.Main.teacherId = rs.teacherId;
                 mainWindow.load('layouts/main0.html', Page);
                 loginDiv.remove();
             } else {
