@@ -1,12 +1,13 @@
-<meta title="教师工作量信息"/>
+<meta title="教师工作量信息" args="teacherId"/>
 <h3>教师工作量信息</h3>
 <form class="form-inline" id="teacherWorloadQueryForm" s="form"
       s-form="{action: queryTeacherWorkload}" style="padding-top: 20px;">
     <select s="select" id="work_year" name="year"
-            s-build="S.get('rest/workload_year')"
+            s-build="S.get('rest/workload_year', {teacherId: teacherId})"
             class="form-control" style="width: 120px;">
         <option value="">选择年份</option>
     </select>
+    <input type="hidden" name="teacherId" s s-data="teacherId">
     <input type="hidden" name="page" value="1" id="page"/>
     <input type="hidden" name="pageSize" value="20"/>
     <input type="submit" class="btn btn-success" value="查找"/>
@@ -47,7 +48,7 @@
         <td name="graduation_design"></td>
         <td name="master_doctor"></td>
         <td name="score"></td>
-        <td class="text-right">
+        <td class="text-right" style="text-align: center;">
             <input type="button" class="btn btn-sm btn-info" value="编辑"/>
         </td>
     </tr>
