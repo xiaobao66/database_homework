@@ -103,44 +103,10 @@ span.label {
     background-color: #57bc20;
 }
 
-.btn-warning {
-    color: #333;
-    border: 1px solid #ddd;
-    background-color: #f7f7f7;
-}
-
-.btn-warning:hover {
-    color: #fff;
-    border: 1px solid #ffa200;
-    background-color: #ffa200;
-}
-
 .btn-info {
     color: #ffffff;
     background-color: #5bc0de;
     border-color: #46b8da;
-}
-
-.btn-danger {
-    color: #333;
-    border: 1px solid #ddd;
-    background-color: #f7f7f7;
-}
-
-.btn-danger:hover {
-    color: #fff;
-    border: 1px solid #f25721;
-    background-color: #f25721;
-}
-
-.btn-danger:hover {
-    border: 1px solid #da4820;
-    background-color: #e64418;
-    background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #f25721), color-stop(100%, #e4551a));
-    background: -webkit-linear-gradient(top, #f25721, #e4551a);
-    background: -moz-linear-gradient(top, #f25721, #e4551a);
-    background: -o-linear-gradient(top, #f25721, #e4551a);
-    background: linear-gradient(top, #f25721, #e4551a)
 }
 
 .btn-link {

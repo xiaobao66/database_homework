@@ -178,6 +178,79 @@ app.post('/rest/password_change', function (req, res) {
     });
 });
 
+//获取工作量年份
+app.get('/rest/workload_year', function (req, res) {
+    var workYearSql = "SELECT\n" +
+        "	`year`\n" +
+        "FROM\n" +
+        "	job_info"
+
+    db.query(workYearSql).done(function (result, fields) {
+        var data = [];
+        for (var i = 0; i < result.length; i++) {
+            data[i] = {
+                id: result[i].year,
+                name: result[i].year
+            }
+        }
+        res.json(data);
+    });
+});
+
+//获取教师工作量
+app.get('/rest/teacher_workload', function (req, res) {
+    //获取教师工作量总条数
+    var totalWorkloadSql = "SELECT\n" +
+        "	count(*) total\n" +
+        "FROM\n" +
+        "	job_info\n" +
+        "WHERE\n" +
+        "	1 = 1";
+
+    //获取教师工作量详细信息
+    var workloadInfoSql = "SELECT\n" +
+        "	`year`,\n" +
+        "	research,\n" +
+        "	graduation_design,\n" +
+        "	master_doctor,\n" +
+        "	score\n" +
+        "FROM\n" +
+        "	job_info\n" +
+        "WHERE\n" +
+        "	1 = 1"
+
+    if (req.query.year) {
+        totalWorkloadSql += ' AND year = ' + req.query.year;
+        workloadInfoSql += ' AND year = ' + req.query.year;
+    }
+
+    totalWorkloadSql += ' ORDER BY CONVERT (`year`, SIGNED) DESC';
+    workloadInfoSql += ' ORDER BY CONVERT (`year`, SIGNED) DESC';
+    workloadInfoSql += ' LIMIT ' + (req.query.page - 1) * req.query.pageSize + ', ' + req.query.pageSize;
+
+    var data = {
+        page: req.query.page,
+        pageSize: req.query.pageSize
+    };
+
+    db.query(totalWorkloadSql).done(function (result, fields) {
+        data.total = result[0].total;
+        db.query(workloadInfoSql).done(function (result, fields) {
+            data.results = [];
+            for (var i = 0; i < result.length; i++) {
+                data.results[i] = {
+                    year: result[i].year,
+                    research: result[i].research,
+                    graduation_design: result[i]['graduation_design'],
+                    master_doctor: result[i]['master_doctor'],
+                    score: result[i].score
+                }
+            }
+            res.json(data);
+        })
+    })
+});
+
 //启动express服务器
 app.listen('3000', function () {
     console.log('server started');
