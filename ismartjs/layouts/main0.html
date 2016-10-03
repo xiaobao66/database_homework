@@ -303,7 +303,7 @@
                         var menu = urlMapping[hash];
                         new MainTab(menu).add().active();
                     } else {
-                        openUrl(null, hash, null);
+                        openUrl(null, hash, {teacherId: Main.teacherId});
                     }
                 } else {
                     openMainTab && openMainTab.active();
