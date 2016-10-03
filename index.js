@@ -19,7 +19,7 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 app.use(function (req, res, next) {
     var path = req.path;
-
+    
     if (/^\/rest\/.+$/g.test(path)) {
         next();
         return;
