@@ -1,0 +1,76 @@
+<meta title="新建教师工作量" width="400px" args="teacherId"/>
+<form class="form-horizontal"
+      id="workloadForm"
+      s="form,valid" s-form="{action: submitWorkloadForm}"
+      style="padding-top: 30px;">
+    <div class="form-group" s-valid-role="item">
+        <label class="col-sm-5 control-label">年份：</label>
+        <div class="col-sm-6">
+            <input type="number" name="year" class="form-control"
+                   s-valid-label="年份"
+                   s-valid-error="require(),regex(/^\d{4}$/)">
+        </div>
+    </div>
+    <div class="form-group" s-valid-role="item">
+        <label class="col-sm-5 control-label">科研工作量(元)</label>
+        <div class="col-sm-6">
+            <input type="number" name="research" class="form-control"
+                   s-valid-label="科研工作量(元)"
+                   s-valid-error="require(),regex(/^\d+(\.\d{1,2})?$/)"
+                   s-valid-msg="{
+                        error: {
+                            regex: {
+                                '0': '科研工作量格式不正确，小数点后保留2位'
+                            }
+                        }
+                   }">
+        </div>
+    </div>
+    <div class="form-group" s-valid-role="item">
+        <label class="col-sm-5 control-label">指导毕设(人)</label>
+        <div class="col-sm-6">
+            <input type="number" name="graduation_design" class="form-control"
+                   s-valid-label="指导毕设(人)"
+                   s-valid-error="require()">
+        </div>
+    </div>
+    <div class="form-group" s-valid-role="item">
+        <label class="col-sm-5 control-label">指导硕博(人)</label>
+        <div class="col-sm-6">
+            <input type="number" name="master_doctor" class="form-control"
+                   s-valid-label="指导硕博(人)"
+                   s-valid-error="require()"/>
+        </div>
+    </div>
+</form>
+<script type="text/javascript">
+    S.meta.btns = [
+        {
+            name: "保存",
+            style: "btn btn-primary",
+            click: function () {
+                return S.S("#workloadForm").submit().done(function (rs) {
+                    if (rs.flag === 1) {
+                        S.close(true);
+                        S.notice("新增工作量成功", "success");
+                    } else {
+                        S.close();
+                        S.notice("新增工作量失败", "danger");
+                    }
+                });
+            }
+        },
+        {
+            name: "关闭",
+            style: "btn btn-default",
+            click: function () {
+                S.close();
+            }
+        }
+    ];
+
+    function submitWorkloadForm(data) {
+        data['teacher_id'] = teacherId;
+        return S.post('/rest/workload_add', data);
+    }
+</script>

@@ -285,6 +285,49 @@ app.post('/rest/workload_delete', function (req, res) {
 
 });
 
+function getScore(research, graduation, master) {
+    return Math.floor(Math.floor(research) / 100 * 0.6 + graduation * 0.15 * 5 + master * 0.25 * 10);
+}
+
+//新增教师工作量
+app.post('/rest/workload_add', function (req, res) {
+    var addWorkloadYear = "INSERT INTO `job_info` (\n" +
+        "	teacher_id,\n" +
+        "	`year`,\n" +
+        "	research,\n" +
+        "	graduation_design,\n" +
+        "	master_doctor,\n" +
+        "	score\n" +
+        ")\n" +
+        "VALUES\n" +
+        "	(\n" +
+        "		?,\n" +
+        "		?,\n" +
+        "		?,\n" +
+        "		?,\n" +
+        "		?,\n" +
+        "		?\n" +
+        "	)";
+
+    var research = parseFloat(req.body.research),
+        graduation_design = parseInt(req.body.graduation_design),
+        master_doctor = parseInt(req.body.master_doctor);
+
+    var score = getScore(research, graduation_design, master_doctor);
+
+    db.query(addWorkloadYear, [req.body.teacher_id, req.body.year, research, graduation_design, master_doctor, score]).done(function (result, fields, err) {
+        if (err) {
+            res.json({
+                flag: -1
+            });
+        } else {
+            res.json({
+                flag: 1
+            });
+        }
+    });
+});
+
 //获取上课年份
 app.get('/rest/class_year', function (req, res) {
     var classYear = "SELECT\n" +
