@@ -50,7 +50,7 @@
         <td name="master_doctor"></td>
         <td name="score"></td>
         <td class="text-right" style="text-align: center;">
-            <input type="button" class="btn btn-sm btn-info" value="编辑"/>
+            <input type="button" class="btn btn-sm btn-info" s-click="editTeacherWorkload(this)" value="编辑"/>
         </td>
     </tr>
     </tbody>
@@ -78,6 +78,12 @@
         S.popupOpen('popup/teacher-workload-add.html', {teacherId: teacherId}).done(function (flag) {
             flag && teacherWorkloadGrid.refresh();
         });
+    }
+
+    function editTeacherWorkload(s) {
+        S.popupOpen('popup/teacher-workload-edit.html', {teacherWorkload: s.parent().data()}).done(function (teacherWorkload) {
+            teacherWorkload && s.parent().data(teacherWorkload);
+        })
     }
 
     function deleteWorkload() {

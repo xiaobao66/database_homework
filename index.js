@@ -328,6 +328,50 @@ app.post('/rest/workload_add', function (req, res) {
     });
 });
 
+//修改教师工作量
+app.post('/rest/workload_edit', function (req, res) {
+    var editWorkloadSql = "UPDATE job_info\n" +
+        "SET research = ?,\n" +
+        " graduation_design = ?,\n" +
+        " master_doctor = ?,\n" +
+        " score = ?\n" +
+        "WHERE\n" +
+        "	id = ?";
+
+    var workloadInfoSql = "SELECT\n" +
+        "	id, teacher_id, `year`,\n" +
+        "	research,\n" +
+        "	graduation_design,\n" +
+        "	master_doctor,\n" +
+        "	score\n" +
+        "FROM\n" +
+        "	job_info\n" +
+        "WHERE\n" +
+        "	1 = 1\n" +
+        " AND id ='" + req.body.id + "'";
+
+    var research = parseFloat(req.body.research),
+        graduation_design = parseInt(req.body.graduation_design),
+        master_doctor = parseInt(req.body.master_doctor);
+
+    var score = getScore(research, graduation_design, master_doctor);
+
+    db.query(editWorkloadSql, [research, graduation_design, master_doctor, score, req.body.id]).done(function (result, fields, err) {
+        if (err) {
+            res.json({
+                flag: -1
+            });
+        } else {
+            db.query(workloadInfoSql).done(function (result, fields) {
+                res.json({
+                    flag: 1,
+                    teacherWorkload: result[0]
+                });
+            });
+        }
+    });
+});
+
 //获取上课年份
 app.get('/rest/class_year', function (req, res) {
     var classYear = "SELECT\n" +
