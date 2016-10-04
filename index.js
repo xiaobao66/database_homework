@@ -210,7 +210,7 @@ app.get('/rest/teacher_workload', function (req, res) {
 
     //获取教师工作量详细信息
     var workloadInfoSql = "SELECT\n" +
-        "	`year`,\n" +
+        "	id, teacher_id, `year`,\n" +
         "	research,\n" +
         "	graduation_design,\n" +
         "	master_doctor,\n" +
@@ -241,6 +241,8 @@ app.get('/rest/teacher_workload', function (req, res) {
             data.results = [];
             for (var i = 0; i < result.length; i++) {
                 data.results[i] = {
+                    id: result[i]['id'],
+                    teacher_id: result[i]['teacher_id'],
                     year: result[i].year,
                     research: result[i].research,
                     graduation_design: result[i]['graduation_design'],
@@ -251,6 +253,36 @@ app.get('/rest/teacher_workload', function (req, res) {
             res.json(data);
         })
     })
+});
+
+//删除教师工作量
+app.post('/rest/workload_delete', function (req, res) {
+    //删除教师工作量sql
+    var deleteWorkloadSql = "DELETE\n" +
+        "FROM\n" +
+        "	job_info\n" +
+        "WHERE\n" +
+        "	`id` IN ?";
+
+    var deleteData = JSON.parse(req.body.deleteData),
+        deleteId = [[]];
+
+    for (var i = 0, len = deleteData.length; i < len; i++) {
+        deleteId[0][i] = deleteData[i].id;
+    }
+
+    db.query(deleteWorkloadSql, [deleteId]).done(function (result, fields, err) {
+        if (err) {
+            res.json({
+                flag: -1
+            });
+        } else {
+            res.json({
+                flag: 1
+            });
+        }
+    });
+
 });
 
 //获取上课年份

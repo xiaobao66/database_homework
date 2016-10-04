@@ -43,6 +43,7 @@
     </tr>
     <tr s-loop-role="row" s-check-role="i" s="datac,row">
         <td><input type="checkbox" s-check-role="h"/></td>
+        <td name="id" style="display: none;"></td>
         <td name="year"></td>
         <td name="research"></td>
         <td name="graduation_design"></td>
@@ -78,6 +79,29 @@
     }
 
     function deleteWorkload() {
+        var checkedData = teacherWorkloadGrid.getCheckedData();
+        var deleteData = [];
 
+        if (checkedData.length === 0) {
+            S.alert('请选择要删除的工作量', 'warning');
+            return;
+        }
+
+        for (var i = 0; i < checkedData.length; i++) {
+            deleteData[i] = {
+                id: checkedData[i]['id']
+            }
+        }
+
+        S.confirm('确定要删除这些工作量吗？').done(function () {
+            S.post('/rest/workload_delete', {deleteData: JSON.stringify(deleteData)}).done(function (rs) {
+                if (rs.flag === 1) {
+                    S.alert('删除工作量成功', 'success');
+                    teacherWorkloadGrid.refresh();
+                } else if (rs.flag === -1) {
+                    S.alert('删除工作量失败，请重试', 'danger');
+                }
+            });
+        });
     }
 </script>
