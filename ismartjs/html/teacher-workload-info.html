@@ -97,6 +97,7 @@
             S.post('/rest/workload_delete', {deleteData: JSON.stringify(deleteData)}).done(function (rs) {
                 if (rs.flag === 1) {
                     S.alert('删除工作量成功', 'success');
+                    S.S('#work_year').refresh();
                     teacherWorkloadGrid.refresh();
                 } else if (rs.flag === -1) {
                     S.alert('删除工作量失败，请重试', 'danger');
