@@ -1,0 +1,60 @@
+<meta title="新建职称信息" width="400px"/>
+<form class="form-horizontal"
+      id="titleInfoManagerForm"
+      s="form,valid" s-form="{action: submitTitleInfoManagerForm}"
+      style="padding-top: 30px;">
+    <div class="form-group" s-valid-role="item">
+        <label class="col-sm-5 control-label">职称名：</label>
+        <div class="col-sm-6">
+            <input type="text" name="title_name" class="form-control"
+                   s-valid-label="职称名"
+                   s-valid-error="require()">
+        </div>
+    </div>
+    <div class="form-group" s-valid-role="item">
+        <label class="col-sm-5 control-label">工资：</label>
+        <div class="col-sm-6">
+            <input type="number" name="salary" class="form-control"
+                   s-valid-label="工资"
+                   s-valid-error="require()">
+        </div>
+    </div>
+    <div class="form-group" s-valid-role="item">
+        <label class="col-sm-5 control-label">津贴：</label>
+        <div class="col-sm-6">
+            <input type="number" name="allowance" class="form-control"
+                   s-valid-label="津贴"
+                   s-valid-error="require()"/>
+        </div>
+    </div>
+</form>
+<script type="text/javascript">
+    S.meta.btns = [
+        {
+            name: "保存",
+            style: "btn btn-primary",
+            click: function () {
+                return S.S("#titleInfoManagerForm").submit().done(function (rs) {
+                    if (rs.flag === 1) {
+                        S.close(true);
+                        S.notice("新增职称信息成功", "success");
+                    } else {
+                        S.close();
+                        S.notice("新增职称信息失败", "danger");
+                    }
+                });
+            }
+        },
+        {
+            name: "关闭",
+            style: "btn btn-default",
+            click: function () {
+                S.close();
+            }
+        }
+    ];
+
+    function submitTitleInfoManagerForm(data) {
+        return S.post('/rest/title_info_manager_add', data);
+    }
+</script>
