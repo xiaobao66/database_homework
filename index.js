@@ -466,6 +466,7 @@ app.get('/rest/teacher_info_manager', function (req, res) {
         "	teacher_info.`name` teacher_name,\n" +
         "	sex,\n" +
         "	college,\n" +
+        "	title_info.title_id,\n" +
         "	title_info.`name` title_name\n" +
         "FROM\n" +
         "	teacher_info,\n" +
@@ -498,6 +499,7 @@ app.get('/rest/teacher_info_manager', function (req, res) {
                     teacher_name: result[i].teacher_name,
                     sex: result[i].sex,
                     college: result[i].college,
+                    title_id: result[i].title_id,
                     title_name: result[i].title_name
                 }
             }
@@ -602,6 +604,30 @@ app.post('/rest/teacher_info_manager_delete', function (req, res) {
         } else {
             res.json({
                 flag: 1
+            });
+        }
+    });
+});
+
+//修改教师基本信息
+app.post('/rest/teacher_info_manager_edit', function (req, res) {
+    var updateTeacherInfoSql = "UPDATE teacher_info\n" +
+        "SET `name` = ?,\n" +
+        " sex = ?,\n" +
+        " college = ?,\n" +
+        " title_id = ?\n" +
+        "WHERE\n" +
+        "	teacher_id = ?";
+
+    db.query(updateTeacherInfoSql, [req.body.teacher_name, req.body.sex, req.body.college, req.body.title_id, req.body.teacher_id]).done(function (result, fields, err) {
+        if (err) {
+            res.json({
+                flag: -1
+            });
+        } else {
+            res.json({
+                flag: 1,
+                teacherInfo: req.body
             });
         }
     });

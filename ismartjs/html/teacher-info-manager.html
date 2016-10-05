@@ -54,6 +54,7 @@
             {%}%}
         </td>
         <td s="" s-data-filter="'college'" name="college"></td>
+        <td s="" s-data-filter="'title_id'" name="title_id" style="display: none;"></td>
         <td s="" s-data-filter="'title_name'" name="title_name"></td>
         <td class="text-right" style="text-align: center;">
             <input type="button" class="btn btn-sm btn-info" s-click="editTeacherInfo(this)" value="编辑"/>
@@ -115,5 +116,12 @@
                 }
             });
         });
+    }
+
+    //修改教师基本信息
+    function editTeacherInfo(s) {
+        S.popupOpen('popup/teacher-info-manager-edit.html', {teacherInfo: s.parent().data()}).done(function (teacherInfo) {
+            teacherInfo && s.parent().data(teacherInfo);
+        })
     }
 </script>
