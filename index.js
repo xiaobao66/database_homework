@@ -544,15 +544,37 @@ app.post('/rest/teacher_info_manager_add', function (req, res) {
         "		?\n" +
         "	)";
 
+    var insertUserInfoSql = "INSERT INTO user_info (\n" +
+        "	`username`,\n" +
+        "	`password`,\n" +
+        "	flag,\n" +
+        "	teacher_id\n" +
+        ")\n" +
+        "VALUES\n" +
+        "	(\n" +
+        "		?,\n" +
+        "		?,\n" +
+        "		?,\n" +
+        "		?\n" +
+        "	)";
+
     db.query(insertTeacherInfoSql, [req.body.teacher_id, req.body.teacher_name, req.body.sex, req.body.college, req.body.title_id]).done(function (result, fields, err) {
         if (err) {
             res.json({
                 flag: -1
-            })
+            });
         } else {
-            res.json({
-                flag: 1
-            })
+            db.query(insertUserInfoSql, [req.body.teacher_id, '123456', 0, req.body.teacher_id]).done(function (result, fields, err) {
+                if (err) {
+                    res.json({
+                        flag: -1
+                    });
+                } else {
+                    res.json({
+                        flag: 1
+                    });
+                }
+            });
         }
     });
 });
