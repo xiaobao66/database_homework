@@ -545,7 +545,7 @@ app.post('/rest/teacher_info_manager_add', function (req, res) {
         "	)";
 
     db.query(insertTeacherInfoSql, [req.body.teacher_id, req.body.teacher_name, req.body.sex, req.body.college, req.body.title_id]).done(function (result, fields, err) {
-        if(err) {
+        if (err) {
             res.json({
                 flag: -1
             })
@@ -553,6 +553,34 @@ app.post('/rest/teacher_info_manager_add', function (req, res) {
             res.json({
                 flag: 1
             })
+        }
+    });
+});
+
+//删除教师基本信息
+app.post('/rest/teacher_info_manager_delete', function (req, res) {
+    var deleteTeacherInfoSql = "DELETE\n" +
+        "FROM\n" +
+        "	teacher_info\n" +
+        "WHERE\n" +
+        "	`teacher_id` IN ?";
+
+    var deleteData = JSON.parse(req.body.deleteData),
+        deleteId = [[]];
+
+    for (var i = 0, len = deleteData.length; i < len; i++) {
+        deleteId[0][i] = deleteData[i].teacher_id;
+    }
+
+    db.query(deleteTeacherInfoSql, [deleteId]).done(function (result, fields, err) {
+        if (err) {
+            res.json({
+                flag: -1
+            });
+        } else {
+            res.json({
+                flag: 1
+            });
         }
     });
 });

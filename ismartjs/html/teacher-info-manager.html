@@ -91,6 +91,29 @@
 
     //删除教师信息
     function deleteTeacherInfo() {
+        var checkedData = teacherInfoGrid.getCheckedData();
+        var deleteData = [];
 
+        if (checkedData.length === 0) {
+            S.alert('请选择要删除的教师信息', 'warning');
+            return;
+        }
+
+        for (var i = 0; i < checkedData.length; i++) {
+            deleteData[i] = {
+                teacher_id: checkedData[i]['teacher_id']
+            }
+        }
+
+        S.confirm('确定要删除这些教师吗？').done(function () {
+            S.post('/rest/teacher_info_manager_delete', {deleteData: JSON.stringify(deleteData)}).done(function (rs) {
+                if (rs.flag === 1) {
+                    S.alert('删除教师基本信息成功', 'success');
+                    teacherInfoGrid.refresh();
+                } else if (rs.flag === -1) {
+                    S.alert('删除教师基本信息失败，请重试', 'danger');
+                }
+            });
+        });
     }
 </script>
