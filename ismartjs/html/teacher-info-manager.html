@@ -17,7 +17,7 @@
     <input type="button" class="btn btn-sm btn-info" value="新建教师信息" s-click="createTeacherInfo()"/>
     <input type="button" class="btn btn-sm btn-danger" value="删除教师信息" s-click="deleteTeacherInfo()"/>
 </div>
-<table s="check,datac" id="teacherInfoGrid"
+<table s="check,nda,datac" id="teacherInfoGrid"
        s-data="S.get('/rest/teacher_info_manager', S.N('#teacherInfoManager').serialize())"
        class="table table-striped table-hover" style="width: 100%;">
     <thead>

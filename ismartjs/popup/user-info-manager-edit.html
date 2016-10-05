@@ -1,0 +1,81 @@
+<meta title="修改用户信息" width="400px" args="userInfo"/>
+<form class="form-horizontal"
+      id="userInfoManagerForm"
+      s="form,valid,nda,datac" s-form="{action: submitUserInfoManagerForm}"
+      s-data="userInfo"
+      style="padding-top: 30px;">
+    <div class="form-group" s-valid-role="item" style="display: none;">
+        <label class="col-sm-5 control-label">教师ID：</label>
+        <div class="col-sm-6">
+            <input type="hidden" name="teacher_id" class="form-control">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-5 control-label">教师姓名：</label>
+        <div class="col-sm-6">
+            <span id="teacher_username" s s-data="userInfo.teacher_name"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-5 control-label">用户名：</label>
+        <div class="col-sm-6">
+            <span id="username" s s-data="userInfo.username"></span>
+        </div>
+    </div>
+    <div class="form-group" s-valid-role="item">
+        <label class="col-sm-5 control-label">密码：</label>
+        <div class="col-sm-6">
+            <input type="password" name="password" class="form-control"
+                   s-valid-label="密码"
+                   s-valid-id="password"
+                   s-valid-error="require(),len(5,15)"/>
+        </div>
+    </div>
+    <div class="form-group" s-valid-role="item">
+        <label class="col-sm-5 control-label">确认密码：</label>
+        <div class="col-sm-6">
+            <input type="password" name="rePassword" class="form-control"
+                   s-data-filter="'password'"
+                   s-valid-label="确认密码"
+                   s-valid-error="require(),len(5,15),eq('password')"/>
+        </div>
+    </div>
+    <div class="form-group" s-valid-role="item" style="display: none;">
+        <label class="col-sm-5 control-label">权限：</label>
+        <div class="col-sm-6">
+            <input type="hidden" name="flag">
+        </div>
+    </div>
+</form>
+<script type="text/javascript">
+    S.meta.btns = [
+        {
+            name: "保存",
+            style: "btn btn-primary",
+            click: function () {
+                return S.S("#userInfoManagerForm").submit().done(function (rs) {
+                    if (rs.flag === 1) {
+                        S.close(rs.userInfo);
+                        S.notice("修改用户信息成功", "success");
+                    } else {
+                        S.close();
+                        S.notice("修改用户信息失败", "danger");
+                    }
+                });
+            }
+        },
+        {
+            name: "关闭",
+            style: "btn btn-default",
+            click: function () {
+                S.close();
+            }
+        }
+    ];
+
+    function submitUserInfoManagerForm(data) {
+        data.teacher_name = S.N('#teacher_username').text();
+        data.username = S.N('#username').text();
+        return S.post('/rest/user_info_manager_edit', data);
+    }
+</script>

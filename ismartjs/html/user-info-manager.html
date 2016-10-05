@@ -1,2 +1,78 @@
-<meta title="用户信息管理">
+<meta title="用户信息管理"/>
 <h3>用户信息管理</h3>
+<form class="form-inline" id="userInfoManager" s="form"
+      s-form="{action: queryUserInfo}" style="padding-top: 20px;">
+    <input type="text" name="teacherId" placeholder="用户名/教师ID" autocomplete="off">
+    <input type="text" name="teacherName" placeholder="教师姓名" autocomplete="off">
+    <input type="hidden" name="page" value="1" id="page"/>
+    <input type="hidden" name="pageSize" value="20"/>
+    <input type="submit" class="btn btn-success" value="查找"/>
+</form>
+<table s="check,nda,datac" id="userInfoGrid"
+       s-data="S.get('/rest/user_info_manager', S.N('#userInfoManager').serialize())"
+       class="table table-striped table-hover" style="width: 100%;">
+    <thead>
+    <tr>
+        <th style="width: 15%;">用户名</th>
+        <th style="width: 25%;">密码</th>
+        <th style="width: 20%;">权限</th>
+        <th style="width: 20%;">教师ID</th>
+        <th style="width: 10%;text-align: center;">操作</th>
+    </tr>
+    </thead>
+    <tbody s="loop" s-data-filter="'results'">
+    <tr s-loop-role="empty">
+        <td colspan="5">
+            <div class="s-ui-none-data-info text-center"><i class="fa fa-info-circle text-info"></i> 未查询到教师信息</div>
+        </td>
+    </tr>
+    <tr s-loop-role="loading">
+        <td colspan="5">
+            <div class="text-center" style="padding: 20px;"><i class="fa fa-spinner fa-spin fa-3x fa-fw"></i></div>
+        </td>
+    </tr>
+    <tr s-loop-role="row" s="datac,row">
+        <td s="" s-data-filter="'teacher_name'"></td>
+        <td s="" s-data-filter="'username'" name="username"></td>
+        <td s="" s-data-filter="'password'" name="password"></td>
+        <td s="tpl">
+            {%if(this.flag == 0){%}
+            <span>普通用户</span>
+            {%} else {%}
+            <span>超级管理员</span>
+            {%}%}
+        </td>
+        <td s="" s-data-filter="'teacher_id'" name="teacher_id" style="display: none;"></td>
+        <td class="text-right" style="text-align: center;">
+            <input type="button" class="btn btn-sm btn-info" s-click="editUserInfo(this)" value="编辑"/>
+        </td>
+    </tr>
+    </tbody>
+    <tfoot>
+    <tr>
+        <td colspan="5" class="s-ui-pagination-wrapper">
+            <ul s="pagination" id="userBillPagination"
+                s-pagination="{action:function(){S.N('#page').val(this); userInfoGrid.refresh()}}"
+                class="pagination pagination-sm pull-right" style="margin: 0">
+            </ul>
+            <div class="s-ui-pagination-info pull-right">共有<span name="total"></span>条记录</div>
+        </td>
+    </tr>
+    </tfoot>
+</table>
+<script type="text/javascript">
+    var userInfoGrid = S.S('#userInfoGrid');
+
+    //查询用户信息
+    function queryUserInfo() {
+        S.N('#page').val(1);
+        userInfoGrid.refresh();
+    }
+
+    //编辑用户信息
+    function editUserInfo(s) {
+        S.popupOpen('popup/user-info-manager-edit.html', {userInfo: s.parent().data()}).done(function (userInfo) {
+            userInfo && s.parent().data(userInfo);
+        })
+    }
+</script>
