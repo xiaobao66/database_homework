@@ -449,6 +449,63 @@ app.get('/rest/teacher_class', function (req, res) {
     })
 });
 
+//超级管理员
+//获取教师基本信息
+app.get('/rest/teacher_info_manager', function (req, res) {
+    //获取教师基本信息总条数
+    var totalTeacherSql = "SELECT\n" +
+        "	COUNT(*) total\n" +
+        "FROM\n" +
+        "	teacher_info\n" +
+        "WHERE\n" +
+        "	1 = 1";
+
+    //获取教师基本信息详情
+    var teacherInfoSql = "SELECT\n" +
+        "	teacher_id,\n" +
+        "	teacher_info.`name` teacher_name,\n" +
+        "	sex,\n" +
+        "	college,\n" +
+        "	title_info.`name` title_name\n" +
+        "FROM\n" +
+        "	teacher_info,\n" +
+        "	title_info\n" +
+        "WHERE\n" +
+        "	teacher_info.title_id = title_info.title_id";
+
+    if (req.query.teacherId) {
+        totalTeacherSql += ' AND teacher_info.teacher_id LIKE ' + "'%" + req.query.teacherId + "%'";
+        teacherInfoSql += ' AND teacher_info.teacher_id LIKE ' + "'%" + req.query.teacherId + "%'";
+    } else if (req.query.teacherName) {
+        totalTeacherSql += ' AND teacher_info.`name` LIKE ' + "'%" + req.query.teacherName + "%'";
+        teacherInfoSql += ' AND teacher_info.`name` LIKE ' + "'%" + req.query.teacherName + "%'";
+    }
+
+    teacherInfoSql += ' LIMIT ' + (req.query.page - 1) * req.query.pageSize + ', ' + req.query.pageSize;
+
+    var data = {
+        page: req.query.page,
+        pageSize: req.query.pageSize
+    };
+
+    db.query(totalTeacherSql).done(function (result, fields) {
+        data.total = result[0].total;
+        db.query(teacherInfoSql).done(function (result, fields) {
+            data.results = [];
+            for (var i = 0; i < result.length; i++) {
+                data.results[i] = {
+                    teacher_id: result[i].teacher_id,
+                    teacher_name: result[i].teacher_name,
+                    sex: result[i].sex,
+                    college: result[i].college,
+                    title_name: result[i].title_name
+                }
+            }
+            res.json(data);
+        })
+    })
+});
+
 //启动express服务器
 app.listen('3000', function () {
     console.log('server started');
