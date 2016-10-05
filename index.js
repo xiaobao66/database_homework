@@ -802,6 +802,29 @@ app.post('/rest/title_info_manager_delete', function (req, res) {
     });
 });
 
+//修改职称信息
+app.post('/rest/title_info_manager_edit', function (req, res) {
+    var updateTitleInfoSql = "UPDATE title_info\n" +
+        "SET `name` = ?,\n" +
+        " salary = ?,\n" +
+        " allowance = ?\n" +
+        "WHERE\n" +
+        "	title_id = ?";
+
+    db.query(updateTitleInfoSql, [req.body.name, req.body.salary, req.body.allowance, req.body.title_id]).done(function (result, fields, err) {
+        if (err) {
+            res.json({
+                flag: -1
+            });
+        } else {
+            res.json({
+                flag: 1,
+                titleInfo: req.body
+            });
+        }
+    });
+});
+
 //启动express服务器
 app.listen('3000', function () {
     console.log('server started');

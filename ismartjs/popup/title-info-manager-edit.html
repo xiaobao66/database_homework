@@ -1,0 +1,64 @@
+<meta title="修改职称信息" width="400px" args="titleInfo"/>
+<form class="form-horizontal"
+      id="titleInfoManagerForm"
+      s="form,valid,nda,datac" s-form="{action: submitTitleInfoManagerForm}"
+      s-data="titleInfo"
+      style="padding-top: 30px;">
+    <div class="form-group" s-valid-role="item" style="display: none;">
+        <label class="col-sm-5 control-label">职称ID：</label>
+        <div class="col-sm-6">
+            <input type="hidden" name="title_id" class="form-control">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-5 control-label">职称名：</label>
+        <div class="col-sm-6">
+            <input type="text" name="name" class="form-control"
+                   s-valid-label="职称名" s-valid-error="require()"/>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-5 control-label">工资：</label>
+        <div class="col-sm-6">
+            <input type="number" name="salary" class="form-control"
+                   s-valid-label="工资" s-valid-error="require()"/>
+        </div>
+    </div>
+    <div class="form-group" s-valid-role="item">
+        <label class="col-sm-5 control-label">津贴：</label>
+        <div class="col-sm-6">
+            <input type="number" name="allowance" class="form-control"
+                   s-valid-label="津贴" s-valid-error="require()"/>
+        </div>
+    </div>
+</form>
+<script type="text/javascript">
+    S.meta.btns = [
+        {
+            name: "保存",
+            style: "btn btn-primary",
+            click: function () {
+                return S.S("#titleInfoManagerForm").submit().done(function (rs) {
+                    if (rs.flag === 1) {
+                        S.close(rs.titleInfo);
+                        S.notice("修改职称信息成功", "success");
+                    } else {
+                        S.close();
+                        S.notice("修改职称信息失败", "danger");
+                    }
+                });
+            }
+        },
+        {
+            name: "关闭",
+            style: "btn btn-default",
+            click: function () {
+                S.close();
+            }
+        }
+    ];
+
+    function submitTitleInfoManagerForm(data) {
+        return S.post('/rest/title_info_manager_edit', data);
+    }
+</script>

@@ -100,7 +100,9 @@
         });
     }
 
-    function editTitleInfo() {
-
+    function editTitleInfo(s) {
+        S.popupOpen('popup/title-info-manager-edit.html', {titleInfo: s.parent().data()}).done(function (titleInfo) {
+            titleInfo && s.parent().data(titleInfo);
+        });
     }
 </script>
