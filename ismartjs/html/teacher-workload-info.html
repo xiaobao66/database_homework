@@ -76,7 +76,11 @@
 
     function createWorkload() {
         S.popupOpen('popup/teacher-workload-add.html', {teacherId: teacherId}).done(function (flag) {
-            flag && teacherWorkloadGrid.refresh();
+            if(flag) {
+                S.N('#work_year').val('');
+                S.S('#work_year').refresh();
+                teacherWorkloadGrid.refresh()
+            }
         });
     }
 
