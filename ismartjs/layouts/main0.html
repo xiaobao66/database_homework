@@ -93,11 +93,13 @@
     var loginProcessStatus = 0;
     var loginRetryCallbacks = [];
     var menuUrl = null;
-    if(Main.flag === 0) {
-        menuUrl = 'json/menu.json'
+    if (Main.flag === 0) {
+        menuUrl = 'json/menu.json';
+    } else {
+        menuUrl = 'json/menu-admin.json';
     }
 
-    Main = $.extend({
+    Main = $.extend(Main || {}, {
         menuUrl: menuUrl, //需要您来定义
         defaultTabIcon: "fa fa-file",
         defaultMenuIcon: "",
@@ -163,7 +165,7 @@
                 return hash;
             }
         }
-    }, Main || {});
+    });
 
     Main.init.call(S);
 
@@ -305,7 +307,7 @@
                         var menu = urlMapping[hash];
                         new MainTab(menu).add().active();
                     } else {
-                        openUrl(null, hash, {teacherId: Main.teacherId,username: Main.username});
+                        openUrl(null, hash, {teacherId: Main.teacherId, username: Main.username});
                     }
                 } else {
                     openMainTab && openMainTab.active();
