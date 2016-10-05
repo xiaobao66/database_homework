@@ -506,6 +506,57 @@ app.get('/rest/teacher_info_manager', function (req, res) {
     })
 });
 
+//获取教师职称信息
+app.get('/rest/get_teacher_title', function (req, res) {
+    var teacherTitleSql = "SELECT\n" +
+        "	title_id,\n" +
+        "	`name`\n" +
+        "FROM\n" +
+        "	title_info";
+
+    db.query(teacherTitleSql).done(function (result, fields) {
+        var data = [];
+        for (var i = 0; i < result.length; i++) {
+            data[i] = {
+                id: result[i].title_id,
+                name: result[i].name
+            }
+        }
+        res.json(data);
+    });
+});
+
+//新增教师基本信息
+app.post('/rest/teacher_info_manager_add', function (req, res) {
+    var insertTeacherInfoSql = "INSERT INTO teacher_info (\n" +
+        "	teacher_id,\n" +
+        "	`name`,\n" +
+        "	sex,\n" +
+        "	college,\n" +
+        "	title_id\n" +
+        ")\n" +
+        "VALUES\n" +
+        "	(\n" +
+        "		?,\n" +
+        "		?,\n" +
+        "		?,\n" +
+        "		?,\n" +
+        "		?\n" +
+        "	)";
+
+    db.query(insertTeacherInfoSql, [req.body.teacher_id, req.body.teacher_name, req.body.sex, req.body.college, req.body.title_id]).done(function (result, fields, err) {
+        if(err) {
+            res.json({
+                flag: -1
+            })
+        } else {
+            res.json({
+                flag: 1
+            })
+        }
+    });
+});
+
 //启动express服务器
 app.listen('3000', function () {
     console.log('server started');

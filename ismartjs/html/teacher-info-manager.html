@@ -82,7 +82,11 @@
 
     //新建教师信息
     function createTeacherInfo() {
-
+        S.popupOpen('popup/teacher-info-manager-add.html').done(function (flag) {
+            if (flag) {
+                teacherInfoGrid.refresh();
+            }
+        });
     }
 
     //删除教师信息
