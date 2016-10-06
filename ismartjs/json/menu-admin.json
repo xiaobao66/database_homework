@@ -37,5 +37,24 @@
         "url": "html/teacher-workload-info-manager.html"
       }
     ]
+  },
+  {
+    "id": "teacher_teach_class_info_manager",
+    "title": "教师上课管理",
+    "icon": "fa fa-file",
+    "children": [
+      {
+        "id": "class_info_manager",
+        "title": "课程信息管理",
+        "icon": "fa fa-file",
+        "url": "html/class-info-manager.html"
+      },
+      {
+        "id": "teacher_class_info_manager",
+        "title": "教师上课信息管理",
+        "icon": "fa fa-file",
+        "url": "html/teacher-class-info-manager.html"
+      }
+    ]
   }
 ]

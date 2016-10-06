@@ -912,6 +912,56 @@ app.get('/rest/workload_info_manager', function (req, res) {
     })
 });
 
+//获取课程信息
+app.get('/rest/class_info_manager', function (req, res) {
+    //获取课程信息总条数
+    var totalClassInfoSql = "SELECT\n" +
+        "	count(*) total\n" +
+        "FROM\n" +
+        "	class_info\n" +
+        "WHERE\n" +
+        "	1 = 1";
+
+    //获取课程详细信息
+    var classInfoSql = "SELECT\n" +
+        "	*\n" +
+        "FROM\n" +
+        "	class_info\n" +
+        "WHERE\n" +
+        "	1 = 1";
+
+    if (req.query.classId) {
+        totalClassInfoSql += ' AND class_id = ' + req.query.classId;
+        classInfoSql += ' AND class_id = ' + req.query.classId;
+    } else if (req.query.className) {
+        totalClassInfoSql += ' AND `name` LIKE ' + "'%" + req.query.className + "%'";
+        classInfoSql += ' AND `name` LIKE ' + "'%" + req.query.className + "%'";
+    }
+
+    classInfoSql += ' LIMIT ' + (req.query.page - 1) * req.query.pageSize + ', ' + req.query.pageSize;
+
+    var data = {
+        page: req.query.page,
+        pageSize: req.query.pageSize
+    };
+
+    db.query(totalClassInfoSql).done(function (result, fields) {
+        data.total = result[0].total;
+        db.query(classInfoSql).done(function (result, fields) {
+            data.results = [];
+            for (var i = 0; i < result.length; i++) {
+                data.results[i] = {
+                    class_id: result[i]['class_id'],
+                    name: result[i].name,
+                    class_time: result[i]['class_time'],
+                    experiment_time: result[i]['experiment_time']
+                }
+            }
+            res.json(data);
+        })
+    })
+});
+
 //启动express服务器
 app.listen('3000', function () {
     console.log('server started');
