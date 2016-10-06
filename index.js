@@ -1128,6 +1128,70 @@ app.get('/rest/teacher_teach_class_manager', function (req, res) {
     })
 });
 
+//获取教师名
+app.get('/rest/get_teacher_name', function (req, res) {
+    var getTeacherNameSql = "SELECT\n" +
+        "	teacher_id,\n" +
+        "	`name`\n" +
+        "FROM\n" +
+        "	teacher_info";
+
+    db.query(getTeacherNameSql).done(function (result, fields) {
+        var data = [];
+        for (var i = 0; i < result.length; i++) {
+            data[i] = {
+                id: result[i].teacher_id,
+                name: result[i].name
+            }
+        }
+        res.json(data);
+    });
+});
+
+//获取课程名
+app.get('/rest/get_class_name', function (req, res) {
+    var getClassNameSql = "SELECT\n" +
+        "	class_id,\n" +
+        "	`name`\n" +
+        "FROM\n" +
+        "	class_info";
+
+    db.query(getClassNameSql).done(function (result, fields) {
+        var data = [];
+        for (var i = 0; i < result.length; i++) {
+            data[i] = {
+                id: result[i].class_id,
+                name: result[i].name
+            }
+        }
+        res.json(data);
+    });
+});
+
+//新增教师上课信息
+app.post('/rest/teacher_class_info_manager_add', function (req, res) {
+    var insertTeacherTeachClassSql = "INSERT INTO teacher_class_info (\n" +
+        "	teacher_id,\n" +
+        "	class_id,\n" +
+        "	`year`,\n" +
+        "	student_number\n" +
+        ")\n" +
+        "VALUES\n" +
+        "	(?,?,?,?)";
+
+    db.query(insertTeacherTeachClassSql, [req.body.teacher_id, req.body.class_id, req.body.year, req.body.student_number]).done(function (result, fields, err) {
+        if (err) {
+            res.json({
+                flag: -1
+            })
+        } else {
+            res.json({
+                flag: 1
+            })
+        }
+    })
+});
+
 //启动express服务器
 app.listen('3000', function () {
     console.log('server started');

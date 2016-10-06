@@ -78,7 +78,13 @@
     }
 
     function createTeacherTeachClass() {
-
+        S.popupOpen('popup/teacher-class-info-manager-add.html').done(function (flag) {
+            if (flag) {
+                S.N('#teach_class_year').val('');
+                S.S('#teach_class_year').refresh();
+                teacherTeachClassGrid.refresh();
+            }
+        });
     }
 
     function deleteTeacherTeachClass() {

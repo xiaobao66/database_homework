@@ -1,0 +1,72 @@
+<meta title="新建教师上课信息" width="400px"/>
+<form class="form-horizontal"
+      id="teacherTeachClassInfoManagerForm"
+      s="form,valid" s-form="{action: submitTeacherTeachClassInfoManagerForm}"
+      style="padding-top: 30px;">
+    <div class="form-group" s-valid-role="item">
+        <label class="col-sm-5 control-label">教师姓名：</label>
+        <div class="col-sm-6">
+            <select s="select" name="teacher_id"
+                    s-build="S.get('rest/get_teacher_name')"
+                    class="form-control">
+                <option value="">选择教师</option>
+            </select>
+        </div>
+    </div>
+    <div class="form-group" s-valid-role="item">
+        <label class="col-sm-5 control-label">课程名：</label>
+        <div class="col-sm-6">
+            <select s="select" name="class_id"
+                    s-build="S.get('rest/get_class_name')"
+                    class="form-control">
+                <option value="">选择课程</option>
+            </select>
+        </div>
+    </div>
+    <div class="form-group" s-valid-role="item">
+        <label class="col-sm-5 control-label">年份：</label>
+        <div class="col-sm-6">
+            <input type="text" name="year" class="form-control"
+                   s-valid-label="年份"
+                   s-valid-error="require()"/>
+        </div>
+    </div>
+    <div class="form-group" s-valid-role="item">
+        <label class="col-sm-5 control-label">学生人数：</label>
+        <div class="col-sm-6">
+            <input type="number" name="student_number" class="form-control"
+                   s-valid-label="学生人数"
+                   s-valid-error="require()"/>
+        </div>
+    </div>
+</form>
+<script type="text/javascript">
+    S.meta.btns = [
+        {
+            name: "保存",
+            style: "btn btn-primary",
+            click: function () {
+                return S.S("#teacherTeachClassInfoManagerForm").submit().done(function (rs) {
+                    if (rs.flag === 1) {
+                        S.close(true);
+                        S.notice("新增教师上课信息成功", "success");
+                    } else {
+                        S.close();
+                        S.notice("新增教师上课信息失败", "danger");
+                    }
+                });
+            }
+        },
+        {
+            name: "关闭",
+            style: "btn btn-default",
+            click: function () {
+                S.close();
+            }
+        }
+    ];
+
+    function submitTeacherTeachClassInfoManagerForm(data) {
+        return S.post('/rest/teacher_class_info_manager_add', data);
+    }
+</script>
