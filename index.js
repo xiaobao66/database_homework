@@ -87,7 +87,7 @@ app.post('/rest/login', function (req, res) {
             };
             // console.log(loginRecord);
             res.cookie('loginId', loginId, {
-                expires: new Date(Date.now() + 900000)
+                expires: new Date(Date.now() + 86400000)
             });
             res.json({
                 loginFlag: 1,
