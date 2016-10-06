@@ -1,0 +1,64 @@
+<meta title="修改课程信息" width="400px" args="classInfo"/>
+<form class="form-horizontal"
+      id="classInfoManagerForm"
+      s="form,valid,nda,datac" s-form="{action: submitClassInfoManagerForm}"
+      s-data="classInfo"
+      style="padding-top: 30px;">
+    <div class="form-group" s-valid-role="item" style="display: none;">
+        <label class="col-sm-5 control-label">课程ID：</label>
+        <div class="col-sm-6">
+            <input type="hidden" name="class_id" class="form-control">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-5 control-label">课程名：</label>
+        <div class="col-sm-6">
+            <input type="text" name="name" class="form-control"
+                   s-valid-label="课程名" s-valid-error="require(),len(2,10)"/>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-5 control-label">上课学时：</label>
+        <div class="col-sm-6">
+            <input type="number" name="class_time" class="form-control"
+                   s-valid-label="上课学时" s-valid-error="require()"/>
+        </div>
+    </div>
+    <div class="form-group" s-valid-role="item">
+        <label class="col-sm-5 control-label">实验学时：</label>
+        <div class="col-sm-6">
+            <input type="number" name="experiment_time" class="form-control"
+                   s-valid-label="实验学时" s-valid-error="require()"/>
+        </div>
+    </div>
+</form>
+<script type="text/javascript">
+    S.meta.btns = [
+        {
+            name: "保存",
+            style: "btn btn-primary",
+            click: function () {
+                return S.S("#classInfoManagerForm").submit().done(function (rs) {
+                    if (rs.flag === 1) {
+                        S.close(rs.classInfo);
+                        S.notice("修改课程信息成功", "success");
+                    } else {
+                        S.close();
+                        S.notice("修改课程信息失败", "danger");
+                    }
+                });
+            }
+        },
+        {
+            name: "关闭",
+            style: "btn btn-default",
+            click: function () {
+                S.close();
+            }
+        }
+    ];
+
+    function submitClassInfoManagerForm(data) {
+        return S.post('/rest/class_info_manager_edit', data);
+    }
+</script>

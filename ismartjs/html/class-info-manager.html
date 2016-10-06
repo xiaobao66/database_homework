@@ -103,6 +103,8 @@
     }
 
     function editClass(s) {
-
+        S.popupOpen('popup/class-info-manager-edit.html', {classInfo: s.parent().data()}).done(function (classInfo) {
+            classInfo && s.parent().data(classInfo);
+        })
     }
 </script>

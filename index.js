@@ -1014,6 +1014,29 @@ app.post('/rest/class_info_manager_delete', function (req, res) {
     });
 });
 
+//修改课程信息
+app.post('/rest/class_info_manager_edit', function (req, res) {
+    var updateClassInfoSql = "UPDATE class_info\n" +
+        "SET `name` = ?,\n" +
+        " class_time = ?,\n" +
+        " experiment_time = ?\n" +
+        "WHERE\n" +
+        "	class_id = ?";
+
+    db.query(updateClassInfoSql, [req.body.name, req.body.class_time, req.body.experiment_time, req.body.class_id]).done(function (result, fields, err) {
+        if (err) {
+            res.json({
+                flag: -1
+            })
+        } else {
+            res.json({
+                flag: 1,
+                classInfo: req.body
+            })
+        }
+    })
+});
+
 //启动express服务器
 app.listen('3000', function () {
     console.log('server started');
