@@ -88,7 +88,32 @@
     }
 
     function deleteTeacherTeachClass() {
+        var checkedData = teacherTeachClassGrid.getCheckedData();
+        var deleteData = [];
 
+        if (checkedData.length === 0) {
+            S.alert('请选择要删除的上课信息', 'warning');
+            return;
+        }
+
+        for (var i = 0; i < checkedData.length; i++) {
+            deleteData[i] = {
+                id: checkedData[i]['id']
+            }
+        }
+
+        S.confirm('确定要删除这些上课信息吗？').done(function () {
+            S.post('/rest/teacher_class_info_manager_delete', {deleteData: JSON.stringify(deleteData)}).done(function (rs) {
+                if (rs.flag === 1) {
+                    S.alert('删除上课信息成功', 'success');
+                    S.N('#teach_class_year').val('');
+                    S.S('#teach_class_year').refresh();
+                    teacherTeachClassGrid.refresh();
+                } else if (rs.flag === -1) {
+                    S.alert('删除上课信息失败，请重试', 'danger');
+                }
+            });
+        });
     }
 
     function editTeacherTeachClass() {

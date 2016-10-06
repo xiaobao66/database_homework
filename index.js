@@ -1192,6 +1192,34 @@ app.post('/rest/teacher_class_info_manager_add', function (req, res) {
     })
 });
 
+//删除教师上课信息
+app.post('/rest/teacher_class_info_manager_delete', function (req, res) {
+    var deleteTeacherTeachClassSql = "DELETE\n" +
+        "FROM\n" +
+        "	teacher_class_info\n" +
+        "WHERE\n" +
+        "	`id` IN ?";
+
+    var deleteData = JSON.parse(req.body.deleteData),
+        deleteId = [[]];
+
+    for (var i = 0, len = deleteData.length; i < len; i++) {
+        deleteId[0][i] = deleteData[i].id;
+    }
+
+    db.query(deleteTeacherTeachClassSql, [deleteId]).done(function (result, fields, err) {
+        if (err) {
+            res.json({
+                flag: -1
+            });
+        } else {
+            res.json({
+                flag: 1
+            });
+        }
+    });
+});
+
 //启动express服务器
 app.listen('3000', function () {
     console.log('server started');
