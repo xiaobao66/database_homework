@@ -24,5 +24,18 @@
         "url": "html/user-info-manager.html"
       }
     ]
+  },
+  {
+    "id": "teacher_basic_workload_info_manager",
+    "title": "教师工作信息管理",
+    "icon": "fa fa-file",
+    "children": [
+      {
+        "id": "teacher_workload_info_manager",
+        "title": "教师工作量管理",
+        "icon": "fa fa-file",
+        "url": "html/teacher-workload-info-manager.html"
+      }
+    ]
   }
 ]
