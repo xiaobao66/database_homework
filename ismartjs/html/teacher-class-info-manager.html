@@ -116,7 +116,13 @@
         });
     }
 
-    function editTeacherTeachClass() {
-
+    function editTeacherTeachClass(s) {
+        S.popupOpen('popup/teacher-class-info-manager-edit.html', {teacherTeachClassInfo: s.parent().data()}).done(function (flag) {
+            if (flag) {
+                S.N('#teach_class_year').val('');
+                S.S('#teach_class_year').refresh();
+                teacherTeachClassGrid.refresh();
+            }
+        })
     }
 </script>

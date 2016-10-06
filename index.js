@@ -1220,6 +1220,29 @@ app.post('/rest/teacher_class_info_manager_delete', function (req, res) {
     });
 });
 
+//修改教师上课信息
+app.post('/rest/teacher_class_info_manager_edit', function (req, res) {
+    var updateTeacherTeachClassSql = "UPDATE teacher_class_info\n" +
+        "SET teacher_id = ?,\n" +
+        " class_id = ?,\n" +
+        " `year` = ?,\n" +
+        " student_number = ?\n" +
+        "WHERE\n" +
+        "	`id` = ?";
+
+    db.query(updateTeacherTeachClassSql, [req.body.teacher_id, req.body.class_id, req.body.year, req.body.student_number, req.body.id]).done(function (result, fields, err) {
+        if (err) {
+            res.json({
+                flag: -1
+            })
+        } else {
+            res.json({
+                flag: 1
+            })
+        }
+    });
+});
+
 //启动express服务器
 app.listen('3000', function () {
     console.log('server started');
