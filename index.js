@@ -962,6 +962,58 @@ app.get('/rest/class_info_manager', function (req, res) {
     })
 });
 
+//新增课程信息
+app.post('/rest/class_info_manager_add', function (req, res) {
+    var insertClassInfoSql = "INSERT INTO class_info (\n" +
+        "	class_id,\n" +
+        "	`name`,\n" +
+        "	class_time,\n" +
+        "	experiment_time\n" +
+        ")\n" +
+        "VALUES\n" +
+        "	(?, ?, ?, ?)";
+
+    db.query(insertClassInfoSql, [req.body.class_id, req.body.class_name, req.body.class_time, req.body.experiment_time]).done(function (result, fields, err) {
+        if (err) {
+            res.json({
+                flag: -1
+            })
+        } else {
+            res.json({
+                flag: 1
+            })
+        }
+    });
+});
+
+//删除课程信息
+app.post('/rest/class_info_manager_delete', function (req, res) {
+    var deleteClassInfoSql = "DELETE\n" +
+        "FROM\n" +
+        "	class_info\n" +
+        "WHERE\n" +
+        "	class_id IN ?";
+
+    var deleteData = JSON.parse(req.body.deleteData),
+        deleteId = [[]];
+
+    for (var i = 0, len = deleteData.length; i < len; i++) {
+        deleteId[0][i] = deleteData[i].id;
+    }
+
+    db.query(deleteClassInfoSql, [deleteId]).done(function (result, fields, err) {
+        if (err) {
+            res.json({
+                flag: -1
+            });
+        } else {
+            res.json({
+                flag: 1
+            });
+        }
+    });
+});
+
 //启动express服务器
 app.listen('3000', function () {
     console.log('server started');

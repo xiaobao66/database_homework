@@ -68,11 +68,38 @@
     }
 
     function createClass() {
-
+        S.popupOpen('popup/class-info-manager-add.html').done(function (flag) {
+            if (flag) {
+                classInfoGrid.refresh();
+            }
+        });
     }
 
     function deleteClass() {
+        var checkedData = classInfoGrid.getCheckedData();
+        var deleteData = [];
 
+        if (checkedData.length === 0) {
+            S.alert('请选择要删除的课程', 'warning');
+            return;
+        }
+
+        for (var i = 0; i < checkedData.length; i++) {
+            deleteData[i] = {
+                id: checkedData[i]['class_id']
+            }
+        }
+
+        S.confirm('确定要删除这些课程吗？').done(function () {
+            S.post('/rest/class_info_manager_delete', {deleteData: JSON.stringify(deleteData)}).done(function (rs) {
+                if (rs.flag === 1) {
+                    S.alert('删除课程成功', 'success');
+                    classInfoGrid.refresh();
+                } else if (rs.flag === -1) {
+                    S.alert('删除课程失败，请重试', 'danger');
+                }
+            });
+        });
     }
 
     function editClass(s) {
