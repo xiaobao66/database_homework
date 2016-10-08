@@ -55,7 +55,7 @@
                         S.notice("新增工作量成功", "success");
                     } else {
                         S.close();
-                        S.notice("新增工作量失败", "danger");
+                        S.notice("新增工作量失败" + rs.err.code, "danger");
                     }
                 });
             }

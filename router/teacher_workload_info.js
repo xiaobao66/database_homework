@@ -96,16 +96,15 @@ teacherWorkloadInfo.post('/rest/workload_delete', function (req, res) {
         deleteId[0][i] = deleteData[i].id;
     }
 
-    db.query(deleteWorkloadSql, [deleteId]).done(function (result, fields, err) {
-        if (err) {
-            res.json({
-                flag: -1
-            });
-        } else {
-            res.json({
-                flag: 1
-            });
-        }
+    db.query(deleteWorkloadSql, [deleteId]).then(function (result, fields) {
+        res.json({
+            flag: 1
+        });
+    }, function (err) {
+        res.json({
+            flag: -1,
+            err: err
+        })
     });
 
 });
@@ -140,16 +139,15 @@ teacherWorkloadInfo.post('/rest/workload_add', function (req, res) {
 
     var score = getScore(research, graduation_design, master_doctor);
 
-    db.query(addWorkloadYear, [req.body.teacher_id, req.body.year, research, graduation_design, master_doctor, score]).done(function (result, fields, err) {
-        if (err) {
-            res.json({
-                flag: -1
-            });
-        } else {
-            res.json({
-                flag: 1
-            });
-        }
+    db.query(addWorkloadYear, [req.body.teacher_id, req.body.year, research, graduation_design, master_doctor, score]).then(function (result, fields) {
+        res.json({
+            flag: 1
+        });
+    }, function (err) {
+        res.json({
+            flag: -1,
+            err: err
+        })
     });
 });
 
@@ -181,19 +179,18 @@ teacherWorkloadInfo.post('/rest/workload_edit', function (req, res) {
 
     var score = getScore(research, graduation_design, master_doctor);
 
-    db.query(editWorkloadSql, [research, graduation_design, master_doctor, score, req.body.id]).done(function (result, fields, err) {
-        if (err) {
+    db.query(editWorkloadSql, [research, graduation_design, master_doctor, score, req.body.id]).then(function (result, fields) {
+        db.query(workloadInfoSql).done(function (result, fields) {
             res.json({
-                flag: -1
+                flag: 1,
+                teacherWorkload: result[0]
             });
-        } else {
-            db.query(workloadInfoSql).done(function (result, fields) {
-                res.json({
-                    flag: 1,
-                    teacherWorkload: result[0]
-                });
-            });
-        }
+        });
+    }, function (err) {
+        res.json({
+            flag: -1,
+            err: err
+        })
     });
 });
 
