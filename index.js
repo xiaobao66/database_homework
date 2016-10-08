@@ -1,12 +1,11 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
+var login = require('./router/login');
 
 var db = require('./lib/mysql').config(require('./db.config.js'));
 
 var app = express();
-
-var loginRecord = {};
 
 //加载模板引擎ejs
 app.engine('html', require('ejs').renderFile);
@@ -38,73 +37,9 @@ app.use(function (req, res, next) {
     }
 });
 
-//用户登录状态查询
-app.get('/rest/login/check', function (req, res) {
-    var loginId = req.cookies.loginId;
-    if (loginId) {
-        if (loginId in loginRecord) {
-            res.json({
-                loginFlag: true,
-                username: loginRecord[loginId].username,
-                flag: loginRecord[loginId].flag,
-                teacherId: loginRecord[loginId].teacherId
-            });
-        } else {
-            res.json({
-                loginFlag: false
-            });
-        }
-    } else {
-        res.json({
-            loginFlag: false
-        });
-    }
-});
-
 //用户登录处理
-app.post('/rest/login', function (req, res) {
-    var username = req.body.account,
-        password = req.body.password;
-
-    var userSql = 'select * from user_info where username = ?';
-
-    //数据库中查询用户信息
-    db.query(userSql, [username]).done(function (result, fields) {
-        if (result.length === 0) {
-            res.json({
-                loginFlag: -1
-            });
-        } else if (result[0].password !== password) {
-            res.json({
-                loginFlag: -2
-            });
-        } else {
-            var loginId = Math.random() + '' + result[0].user_id;
-            loginRecord[loginId] = {
-                username: username,
-                flag: result[0].flag,
-                teacherId: result[0]['teacher_id'] ? result[0]['teacher_id'] : ''
-            };
-            // console.log(loginRecord);
-            res.cookie('loginId', loginId, {
-                expires: new Date(Date.now() + 86400000)
-            });
-            res.json({
-                loginFlag: 1,
-                username: username,
-                flag: result[0].flag,
-                teacherId: result[0]['teacher_id'] ? result[0]['teacher_id'] : ''
-            });
-        }
-    });
-});
-
-//用户登出处理
-app.get('/rest/logout', function (req, res) {
-    res.clearCookie('loginId');
-    delete loginRecord[req.cookies.loginId];
-    res.end('log out');
-});
+login.config(db);
+app.use('/', login.login);
 
 //查询教师基本信息
 app.get('/rest/teacher_info', function (req, res) {
