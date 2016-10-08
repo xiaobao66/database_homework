@@ -13,10 +13,11 @@
        class="table table-striped table-hover" style="width: 100%;">
     <thead>
     <tr>
-        <th style="width: 15%;">用户名</th>
-        <th style="width: 25%;">密码</th>
-        <th style="width: 20%;">权限</th>
         <th style="width: 20%;">教师ID</th>
+        <th style="width: 20%;">教师姓名</th>
+        <th style="width: 15%;">用户名</th>
+        <th style="width: 20%;">密码</th>
+        <th style="width: 15%;">权限</th>
         <th style="width: 10%;text-align: center;">操作</th>
     </tr>
     </thead>
@@ -32,6 +33,7 @@
         </td>
     </tr>
     <tr s-loop-role="row" s="datac,row">
+        <td s="" s-data-filter="'teacher_id'" name="teacher_id"></td>
         <td s="" s-data-filter="'teacher_name'"></td>
         <td s="" s-data-filter="'username'" name="username"></td>
         <td s="" s-data-filter="'password'" name="password"></td>
@@ -42,7 +44,6 @@
             <span>超级管理员</span>
             {%}%}
         </td>
-        <td s="" s-data-filter="'teacher_id'" name="teacher_id" style="display: none;"></td>
         <td class="text-right" style="text-align: center;">
             <input type="button" class="btn btn-sm btn-info" s-click="editUserInfo(this)" value="编辑"/>
         </td>
