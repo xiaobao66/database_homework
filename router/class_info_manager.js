@@ -64,16 +64,15 @@ classInfoManager.post('/rest/class_info_manager_add', function (req, res) {
         "VALUES\n" +
         "	(?, ?, ?, ?)";
 
-    db.query(insertClassInfoSql, [req.body.class_id, req.body.class_name, req.body.class_time, req.body.experiment_time]).done(function (result, fields, err) {
-        if (err) {
-            res.json({
-                flag: -1
-            })
-        } else {
-            res.json({
-                flag: 1
-            })
-        }
+    db.query(insertClassInfoSql, [req.body.class_id, req.body.class_name, req.body.class_time, req.body.experiment_time]).then(function (result, fields) {
+        res.json({
+            flag: 1
+        })
+    }, function (err) {
+        res.json({
+            flag: -1,
+            err: err
+        })
     });
 });
 
@@ -92,16 +91,15 @@ classInfoManager.post('/rest/class_info_manager_delete', function (req, res) {
         deleteId[0][i] = deleteData[i].id;
     }
 
-    db.query(deleteClassInfoSql, [deleteId]).done(function (result, fields, err) {
-        if (err) {
-            res.json({
-                flag: -1
-            });
-        } else {
-            res.json({
-                flag: 1
-            });
-        }
+    db.query(deleteClassInfoSql, [deleteId]).then(function (result, fields) {
+        res.json({
+            flag: 1
+        });
+    }, function (err) {
+        res.json({
+            flag: -1,
+            err: err
+        })
     });
 });
 
@@ -114,17 +112,16 @@ classInfoManager.post('/rest/class_info_manager_edit', function (req, res) {
         "WHERE\n" +
         "	class_id = ?";
 
-    db.query(updateClassInfoSql, [req.body.name, req.body.class_time, req.body.experiment_time, req.body.class_id]).done(function (result, fields, err) {
-        if (err) {
-            res.json({
-                flag: -1
-            })
-        } else {
-            res.json({
-                flag: 1,
-                classInfo: req.body
-            })
-        }
+    db.query(updateClassInfoSql, [req.body.name, req.body.class_time, req.body.experiment_time, req.body.class_id]).then(function (result, fields) {
+        res.json({
+            flag: 1,
+            classInfo: req.body
+        })
+    }, function (err) {
+        res.json({
+            flag: -1,
+            err: err
+        })
     })
 });
 
