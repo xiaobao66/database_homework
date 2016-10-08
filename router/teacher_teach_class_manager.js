@@ -146,16 +146,15 @@ teacherTeachClassManager.post('/rest/teacher_class_info_manager_add', function (
         "VALUES\n" +
         "	(?,?,?,?)";
 
-    db.query(insertTeacherTeachClassSql, [req.body.teacher_id, req.body.class_id, req.body.year, req.body.student_number]).done(function (result, fields, err) {
-        if (err) {
-            res.json({
-                flag: -1
-            })
-        } else {
-            res.json({
-                flag: 1
-            })
-        }
+    db.query(insertTeacherTeachClassSql, [req.body.teacher_id, req.body.class_id, req.body.year, req.body.student_number]).then(function (result, fields) {
+        res.json({
+            flag: 1
+        })
+    }, function (err) {
+        res.json({
+            flag: -1,
+            err: err
+        })
     })
 });
 
@@ -174,16 +173,15 @@ teacherTeachClassManager.post('/rest/teacher_class_info_manager_delete', functio
         deleteId[0][i] = deleteData[i].id;
     }
 
-    db.query(deleteTeacherTeachClassSql, [deleteId]).done(function (result, fields, err) {
-        if (err) {
-            res.json({
-                flag: -1
-            });
-        } else {
-            res.json({
-                flag: 1
-            });
-        }
+    db.query(deleteTeacherTeachClassSql, [deleteId]).then(function (result, fields) {
+        res.json({
+            flag: 1
+        });
+    }, function (err) {
+        res.json({
+            flag: -1,
+            err: err
+        })
     });
 });
 
@@ -197,16 +195,15 @@ teacherTeachClassManager.post('/rest/teacher_class_info_manager_edit', function 
         "WHERE\n" +
         "	`id` = ?";
 
-    db.query(updateTeacherTeachClassSql, [req.body.teacher_id, req.body.class_id, req.body.year, req.body.student_number, req.body.id]).done(function (result, fields, err) {
-        if (err) {
-            res.json({
-                flag: -1
-            })
-        } else {
-            res.json({
-                flag: 1
-            })
-        }
+    db.query(updateTeacherTeachClassSql, [req.body.teacher_id, req.body.class_id, req.body.year, req.body.student_number, req.body.id]).then(function (result, fields) {
+        res.json({
+            flag: 1
+        })
+    }, function (err) {
+        res.json({
+            flag: -1,
+            err: err
+        })
     });
 });
 

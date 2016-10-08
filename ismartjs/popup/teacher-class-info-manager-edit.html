@@ -54,7 +54,7 @@
                         S.notice("修改教师上课信息成功", "success");
                     } else {
                         S.close();
-                        S.notice("修改教师上课信息失败", "danger");
+                        S.notice("修改教师上课信息失败" + rs.err.code, "danger");
                     }
                 });
             }
