@@ -31,9 +31,9 @@ titleInfoManager.get('/rest/title_info_manager', function (req, res) {
         pageSize: req.query.pageSize
     };
 
-    db.query(totalTitleInfoSql).done(function (result, fields, err) {
+    db.query(totalTitleInfoSql).done(function (result, fields) {
         data.total = result[0].total;
-        db.query(titleInfoSql).done(function (result, fields, err) {
+        db.query(titleInfoSql).done(function (result, fields) {
             data.results = [];
             for (var i = 0; i < result.length; i++) {
                 data.results[i] = {
@@ -55,16 +55,15 @@ titleInfoManager.post('/rest/title_info_manager_add', function (req, res) {
         "VALUES\n" +
         "	(?, ?, ?)";
 
-    db.query(insertTitleInfoSql, [req.body.title_name, req.body.salary, req.body.allowance]).done(function (result, fields, err) {
-        if (err) {
-            res.json({
-                flag: -1
-            });
-        } else {
-            res.json({
-                flag: 1
-            });
-        }
+    db.query(insertTitleInfoSql, [req.body.title_name, req.body.salary, req.body.allowance]).then(function (result, fields) {
+        res.json({
+            flag: 1
+        });
+    }, function (err) {
+        res.json({
+            flag: -1,
+            err: err
+        })
     });
 });
 
@@ -83,16 +82,15 @@ titleInfoManager.post('/rest/title_info_manager_delete', function (req, res) {
         deleteId[0][i] = deleteData[i].title_id;
     }
 
-    db.query(deleteTitleInfoSql, [deleteId]).done(function (result, fields, err) {
-        if (err) {
-            res.json({
-                flag: -1
-            });
-        } else {
-            res.json({
-                flag: 1
-            });
-        }
+    db.query(deleteTitleInfoSql, [deleteId]).then(function (result, fields) {
+        res.json({
+            flag: 1
+        });
+    }, function (err) {
+        res.json({
+            flag: -1,
+            err: err
+        })
     });
 });
 
@@ -105,17 +103,16 @@ titleInfoManager.post('/rest/title_info_manager_edit', function (req, res) {
         "WHERE\n" +
         "	title_id = ?";
 
-    db.query(updateTitleInfoSql, [req.body.name, req.body.salary, req.body.allowance, req.body.title_id]).done(function (result, fields, err) {
-        if (err) {
-            res.json({
-                flag: -1
-            });
-        } else {
-            res.json({
-                flag: 1,
-                titleInfo: req.body
-            });
-        }
+    db.query(updateTitleInfoSql, [req.body.name, req.body.salary, req.body.allowance, req.body.title_id]).then(function (result, fields) {
+        res.json({
+            flag: 1,
+            titleInfo: req.body
+        });
+    }, function (err) {
+        res.json({
+            flag: -1,
+            err: err
+        })
     });
 });
 
