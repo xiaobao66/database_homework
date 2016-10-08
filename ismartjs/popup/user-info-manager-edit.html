@@ -59,7 +59,7 @@
                         S.notice("修改用户信息成功", "success");
                     } else {
                         S.close();
-                        S.notice("修改用户信息失败", "danger");
+                        S.notice("修改用户信息失败" + rs.err.code, "danger");
                     }
                 });
             }

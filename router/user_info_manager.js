@@ -66,17 +66,16 @@ userInfoManager.post('/rest/user_info_manager_edit', function (req, res) {
         "WHERE\n" +
         "	username = ?";
 
-    db.query(updateUserInfoSql, [req.body.password, req.body.username]).done(function (result, fields, err) {
-        if (err) {
-            res.json({
-                flag: -1
-            });
-        } else {
-            res.json({
-                flag: 1,
-                userInfo: req.body
-            });
-        }
+    db.query(updateUserInfoSql, [req.body.password, req.body.username]).then(function (result, fields) {
+        res.json({
+            flag: 1,
+            userInfo: req.body
+        });
+    }, function (err) {
+        res.json({
+            flag: -1,
+            err: err
+        })
     });
 });
 
