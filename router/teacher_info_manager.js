@@ -114,24 +114,22 @@ teacherInfoManager.post('/rest/teacher_info_manager_add', function (req, res) {
         "		?\n" +
         "	)";
 
-    db.query(insertTeacherInfoSql, [req.body.teacher_id, req.body.teacher_name, req.body.sex, req.body.college, req.body.title_id]).done(function (result, fields, err) {
-        if (err) {
+    db.query(insertTeacherInfoSql, [req.body.teacher_id, req.body.teacher_name, req.body.sex, req.body.college, req.body.title_id]).then(function (result, fields) {
+        db.query(insertUserInfoSql, [req.body.teacher_id, '123456', 0, req.body.teacher_id]).then(function (result, fields) {
             res.json({
-                flag: -1
+                flag: 1
             });
-        } else {
-            db.query(insertUserInfoSql, [req.body.teacher_id, '123456', 0, req.body.teacher_id]).done(function (result, fields, err) {
-                if (err) {
-                    res.json({
-                        flag: -1
-                    });
-                } else {
-                    res.json({
-                        flag: 1
-                    });
-                }
-            });
-        }
+        }, function (err) {
+            res.json({
+                flag: -1,
+                err: err
+            })
+        });
+    }, function (err) {
+        res.json({
+            flag: -1,
+            err: err
+        })
     });
 });
 
@@ -156,24 +154,22 @@ teacherInfoManager.post('/rest/teacher_info_manager_delete', function (req, res)
         deleteId[0][i] = deleteData[i].teacher_id;
     }
 
-    db.query(deleteUserInfoSql, [deleteId]).done(function (result, fields, err) {
-        if (err) {
+    db.query(deleteUserInfoSql, [deleteId]).then(function (result, fields) {
+        db.query(deleteTeacherInfoSql, [deleteId]).then(function (result, fields) {
             res.json({
-                flag: -1
+                flag: 1
             });
-        } else {
-            db.query(deleteTeacherInfoSql, [deleteId]).done(function (result, fields, err) {
-                if (err) {
-                    res.json({
-                        flag: -1
-                    });
-                } else {
-                    res.json({
-                        flag: 1
-                    });
-                }
-            });
-        }
+        }, function (err) {
+            res.json({
+                flag: -1,
+                err: err
+            })
+        });
+    }, function (err) {
+        res.json({
+            flag: -1,
+            err: err
+        })
     });
 });
 
@@ -187,17 +183,16 @@ teacherInfoManager.post('/rest/teacher_info_manager_edit', function (req, res) {
         "WHERE\n" +
         "	teacher_id = ?";
 
-    db.query(updateTeacherInfoSql, [req.body.teacher_name, req.body.sex, req.body.college, req.body.title_id, req.body.teacher_id]).done(function (result, fields, err) {
-        if (err) {
-            res.json({
-                flag: -1
-            });
-        } else {
-            res.json({
-                flag: 1,
-                teacherInfo: req.body
-            });
-        }
+    db.query(updateTeacherInfoSql, [req.body.teacher_name, req.body.sex, req.body.college, req.body.title_id, req.body.teacher_id]).then(function (result, fields) {
+        res.json({
+            flag: 1,
+            teacherInfo: req.body
+        });
+    }, function (err) {
+        res.json({
+            flag: -1,
+            err: err
+        })
     });
 });
 

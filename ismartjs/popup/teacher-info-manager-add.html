@@ -60,7 +60,7 @@
                         S.notice("新增教师基本信息成功", "success");
                     } else {
                         S.close();
-                        S.notice("新增教师基本信息失败", "danger");
+                        S.notice("新增教师基本信息失败" + rs.err.code, "danger");
                     }
                 });
             }
