@@ -11,6 +11,7 @@ var teacherInfoManager = require('./router/teacher_info_manager');
 var userInfoManager = require('./router/user_info_manager');
 var titleInfoManager = require('./router/title_info_manager');
 var teacherWorkloadInfoManager = require('./router/teacher_workload_info_manager');
+var classInfoManager = require('./router/class_info_manager');
 
 var db = require('./lib/mysql').config(require('./db.config.js'));
 
@@ -79,130 +80,9 @@ app.use('/', titleInfoManager.titleInfoManager);
 teacherWorkloadInfoManager.config(db);
 app.use('/', teacherWorkloadInfoManager.teacherWorkloadInfoManager);
 
-//获取课程信息
-app.get('/rest/class_info_manager', function (req, res) {
-    //获取课程信息总条数
-    var totalClassInfoSql = "SELECT\n" +
-        "	count(*) total\n" +
-        "FROM\n" +
-        "	class_info\n" +
-        "WHERE\n" +
-        "	1 = 1";
-
-    //获取课程详细信息
-    var classInfoSql = "SELECT\n" +
-        "	*\n" +
-        "FROM\n" +
-        "	class_info\n" +
-        "WHERE\n" +
-        "	1 = 1";
-
-    if (req.query.classId) {
-        totalClassInfoSql += ' AND class_id = ' + req.query.classId;
-        classInfoSql += ' AND class_id = ' + req.query.classId;
-    } else if (req.query.className) {
-        totalClassInfoSql += ' AND `name` LIKE ' + "'%" + req.query.className + "%'";
-        classInfoSql += ' AND `name` LIKE ' + "'%" + req.query.className + "%'";
-    }
-
-    classInfoSql += ' LIMIT ' + (req.query.page - 1) * req.query.pageSize + ', ' + req.query.pageSize;
-
-    var data = {
-        page: req.query.page,
-        pageSize: req.query.pageSize
-    };
-
-    db.query(totalClassInfoSql).done(function (result, fields) {
-        data.total = result[0].total;
-        db.query(classInfoSql).done(function (result, fields) {
-            data.results = [];
-            for (var i = 0; i < result.length; i++) {
-                data.results[i] = {
-                    class_id: result[i]['class_id'],
-                    name: result[i].name,
-                    class_time: result[i]['class_time'],
-                    experiment_time: result[i]['experiment_time']
-                }
-            }
-            res.json(data);
-        })
-    })
-});
-
-//新增课程信息
-app.post('/rest/class_info_manager_add', function (req, res) {
-    var insertClassInfoSql = "INSERT INTO class_info (\n" +
-        "	class_id,\n" +
-        "	`name`,\n" +
-        "	class_time,\n" +
-        "	experiment_time\n" +
-        ")\n" +
-        "VALUES\n" +
-        "	(?, ?, ?, ?)";
-
-    db.query(insertClassInfoSql, [req.body.class_id, req.body.class_name, req.body.class_time, req.body.experiment_time]).done(function (result, fields, err) {
-        if (err) {
-            res.json({
-                flag: -1
-            })
-        } else {
-            res.json({
-                flag: 1
-            })
-        }
-    });
-});
-
-//删除课程信息
-app.post('/rest/class_info_manager_delete', function (req, res) {
-    var deleteClassInfoSql = "DELETE\n" +
-        "FROM\n" +
-        "	class_info\n" +
-        "WHERE\n" +
-        "	class_id IN ?";
-
-    var deleteData = JSON.parse(req.body.deleteData),
-        deleteId = [[]];
-
-    for (var i = 0, len = deleteData.length; i < len; i++) {
-        deleteId[0][i] = deleteData[i].id;
-    }
-
-    db.query(deleteClassInfoSql, [deleteId]).done(function (result, fields, err) {
-        if (err) {
-            res.json({
-                flag: -1
-            });
-        } else {
-            res.json({
-                flag: 1
-            });
-        }
-    });
-});
-
-//修改课程信息
-app.post('/rest/class_info_manager_edit', function (req, res) {
-    var updateClassInfoSql = "UPDATE class_info\n" +
-        "SET `name` = ?,\n" +
-        " class_time = ?,\n" +
-        " experiment_time = ?\n" +
-        "WHERE\n" +
-        "	class_id = ?";
-
-    db.query(updateClassInfoSql, [req.body.name, req.body.class_time, req.body.experiment_time, req.body.class_id]).done(function (result, fields, err) {
-        if (err) {
-            res.json({
-                flag: -1
-            })
-        } else {
-            res.json({
-                flag: 1,
-                classInfo: req.body
-            })
-        }
-    })
-});
+//课程信息路由处理
+classInfoManager.config(db);
+app.use('/', classInfoManager.classInfoManager);
 
 //获取教师上课年份
 app.get('/rest/teacher_teach_class_year', function (req, res) {
